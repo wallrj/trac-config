@@ -1,0 +1,3 @@
+trac is not responsible for serving this static content (stuff beneath
+/trac/chrome/common/).  Instead, the main Twisted Web server serves
+it.  The files which used to be here are now in ../htdocs-unused/

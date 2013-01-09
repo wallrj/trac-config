@@ -1,0 +1,16 @@
+#!/bin/bash
+
+export PYTHONPATH=$HOME/.local/lib/python2.5/site-packages/
+
+# Normal system path
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11:/usr/games
+
+# Extra entry for locally installed libraries
+export PATH=$PATH:/home/trac-migration/.local/bin
+
+ulimit -Sm $((1024 * 256))
+ulimit -Sm $((1024 * 256))
+ulimit -Sc unlimited
+
+twistd -r epoll -y trac_server.tac
+/srv/pypy/bin/pypy /usr/bin/twistd --pidfile trac-post-commit-pb-server.pid --logfile trac-post-commit-pb-server.log -y trac-post-commit-pb-server

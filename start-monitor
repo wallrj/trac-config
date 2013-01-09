@@ -1,0 +1,4 @@
+#!/bin/bash
+cd ~/Run/trac
+ulimit -Sc unlimited
+./monitor &
