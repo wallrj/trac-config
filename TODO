@@ -1,0 +1,12 @@
+python-subversion for 'svn' package (what to do about pypy?)
+
+config paths
+- htpasswd
+- ticket-reporter
+- repository_dir
+
+trac log dir
+
+twisted-trac-integration plugins installed properly
+
+monitoring 
