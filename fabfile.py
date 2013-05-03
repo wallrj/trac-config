@@ -44,7 +44,6 @@ class Trac(service.Service):
         # TODO
         with settings(user=self.serviceUser):
             git.branch('https://github.com/twisted-infra/trac-config', self.configDir)
-            git.branch('https://github.com/twisted-infra/twisted-trac-source.git', '.local/lib/python2.5/site-packages/Trac-0.11.6-py2.5.egg')
-            #bazaar.branch('lp:~exarkun/+junk/trac', '.local/lib/python2.5/site-packages/Trac-0.11.6-py2.5.egg')
+            git.branch('https://github.com/twisted-infra/twisted-trac-source.git', '.local/lib/python2.7/site-packages/Trac-0.11.6-py2.7.egg')
 
 globals().update(Trac('trac').getTasks())
