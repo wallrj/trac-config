@@ -5,7 +5,7 @@ ulimit -Sm $((1024 * 256))
 ulimit -Sc unlimited
 
 twistd \
-    --reactor epoll
+    --reactor epoll \
     --logfile ~/log/twistd.log \
     --pidfile ~/run/twistd.pid \
     --rundir ~/run/ \
