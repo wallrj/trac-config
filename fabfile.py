@@ -19,15 +19,13 @@ class Trac(service.Service):
         postgres.createDb('trac', 'trac')
 
         with settings(user=self.serviceUser):
-            p = 'Genshi>=0.5 textile>=2.0 Pygments>=0.6 docutils>=0.3'.split()
-            p = [ "'%s'" % a for a in p]
-            pip.install(" ".join(p), python='system')
+            pip.install('psycopg2', python='system')
             self.task_update(_installDeps=True)
 
-            run('mkdir ~/svn')
+            run('mkdir -p ~/svn')
             run('ln -nsf ~/svn {}/trac-env/svn-repo'.format(self.configDir))
 
-            run('mkdir ~/attachments')
+            run('mkdir -p ~/attachments')
             run('ln -nsf ~/svn {}/trac-env/attachments'.format(self.configDir))
 
             run('ln -nsf {} {}/trac-env/log'.format(self.logDir, self.configDir))
@@ -44,6 +42,10 @@ class Trac(service.Service):
         # TODO
         with settings(user=self.serviceUser):
             git.branch('https://github.com/twisted-infra/trac-config', self.configDir)
-            git.branch('https://github.com/twisted-infra/twisted-trac-source.git', '.local/lib/python2.7/site-packages/trac')
+
+            if _installDeps:
+                pip.install('git+https://github.com/twisted-infra/twisted-trac-source.git', python='system')
+            else:
+                pip.install('--no-deps --upgrade git+https://github.com/twisted-infra/twisted-trac-source.git', python='system')
 
 globals().update(Trac('trac').getTasks())
