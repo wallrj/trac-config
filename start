@@ -11,7 +11,7 @@ twistd \
     --rundir ~/run/ \
     --python ~/config/trac_server.tac
 
-~pypy/bin/pypy \
+~pypy/bin/twistd \
 	--pidfile ~/run/trac-post-commit-pb-server.pid \
 	--logfile ~/log/trac-post-commit-pb-server.log \
 	--python trac-post-commit-pb-server
