@@ -25,12 +25,12 @@ class Trac(service.Service):
             self.task_update(_installDeps=True)
 
             run('mkdir ~/svn')
-            run('ln -s ~/svn {}/trac-env/svn-repo'.format(self.configDir))
+            run('ln -nsf ~/svn {}/trac-env/svn-repo'.format(self.configDir))
 
             run('mkdir ~/attachments')
-            run('ln -s ~/svn {}/trac-env/attachments'.format(self.configDir))
+            run('ln -nsf ~/svn {}/trac-env/attachments'.format(self.configDir))
 
-            run('ln -s {} {}/trac-env/log'.format(self.logDir))
+            run('ln -nsf {} {}/trac-env/log'.format(self.logDir, self.configDir))
 
             run('ln -nsf {}/start {}/start'.format(self.configDir, self.binDir))
 
