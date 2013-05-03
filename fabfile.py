@@ -10,7 +10,7 @@ _hush_pyflakes = [config]
 class Trac(service.Service):
     def task_install(self):
         """
-        a
+        Install trac.
         """
         self.bootstrap(python='system')
 
@@ -31,7 +31,7 @@ class Trac(service.Service):
 
     def task_update(self, _installDeps=False):
         """
-        b
+        Update trac config.
         """
         # TODO
         with settings(user=self.serviceUser):
