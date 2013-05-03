@@ -23,7 +23,7 @@ Provides C{twisted.web.resource.Resource} implementations for various external
 web resources.
 """
 
-import sha, os
+import os
 
 import trac.web.main
 import trac.web.standalone
@@ -43,16 +43,6 @@ class TwistedAuthenticator(trac.web.auth.BasicAuthentication):
         the_hash = self.hash.get(user)
         if the_hash is None:
             return False
-
-        # Try old-style roundup passwords
-        if sha.new(password).hexdigest() == the_hash:
-            # Convert them to new-style trac passwords
-            from trac.env import open_environment
-            from acct_mgr.api import AccountManager
-            env = open_environment("trac-projects/twisted")
-            manager = env[AccountManager]
-            manager.set_password(user, password)
-            return True
 
         return trac.web.auth.BasicAuthentication.test(self, user, password)
 
