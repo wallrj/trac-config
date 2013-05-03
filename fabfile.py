@@ -24,6 +24,14 @@ class Trac(service.Service):
             pip.install(" ".join(p), python='system')
             self.task_update(_installDeps=True)
 
+            run('mkdir ~/svn')
+            run('ln -s ~/svn {}/trac-env/svn-repo'.format(self.configDir))
+
+            run('mkdir ~/attachments')
+            run('ln -s ~/svn {}/trac-env/attachments'.format(self.configDir))
+
+            run('ln -s {} {}/trac-env/log'.format(self.logDir))
+
             run('ln -nsf {}/start {}/start'.format(self.configDir, self.binDir))
 
             cron.install(self.serviceUser, '{}/crontab'.format(self.configDir))
