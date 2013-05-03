@@ -16,13 +16,16 @@ from twisted.internet import reactor
 
 from twisted.web.server import Site
 from twisted.python.threadpool import ThreadPool
+from os import path
+
+config = path.dirname(__file__)
 
 threadpool = ThreadPool(name="trac")
 reactor.callWhenRunning(threadpool.start)
 reactor.addSystemEventTrigger("during", "shutdown", threadpool.stop)
-tracResource = TracResource(reactor, threadpool, '/home/trac-migration/Run/trac/htpasswd', 'trac-projects/twisted')
-htdocs = "/home/trac-migration/Run/trac/trac-projects/twisted/htdocs"
-attachments = "/home/trac-migration/Run/trac/trac-projects/twisted/attachments"
+tracResource = TracResource(reactor, threadpool, path.join(config, 'htpasswd', 'trac-env')
+htdocs = path.join(config, "trac-env/htdocs")
+htdocs = path.join(config, "trac-env/attachments")
 root = RootResource(tracResource, htdocs, attachments)
-site = Site(root, "httpd.log")
+site = Site(root, path.expanduser("~/log/httpd.log")
 TCPServer(9881, site, interface="127.0.0.1").setServiceParent(application)
