@@ -1,4 +1,8 @@
 #!/bin/bash
 
 ulimit -Sc unlimited
-~/bin/monitor &
+
+~pypy/bin/twistd \
+	--pidfile ~/run/trac-monitor.pid \
+	--logfile ~/log/trac-monitor.log \
+	--python ~/config/monitor

@@ -36,8 +36,6 @@ class Trac(service.Service):
             run('ln -nsf {}/stop {}/stop'.format(self.configDir, self.binDir))
             run('ln -nsf {}/restart {}/restart'.format(self.configDir,
                                                        self.binDir))
-            run('ln -nsf {}/monitor {}/monitor'.format(self.configDir,
-                                                       self.binDir))
             run('ln -nsf {}/start-monitor {}/start-monitor'.format(
                 self.configDir, self.binDir))
             cron.install(self.serviceUser, '{}/crontab'.format(self.configDir))
