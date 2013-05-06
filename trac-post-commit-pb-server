@@ -3,13 +3,15 @@ import socket, os
 from twisted.python import log
 from twisted.spread import pb
 from twisted.internet import utils
+from twisted.application import service, internet
+
 
 wolfwood = socket.gethostbyname('svn.twistedmatrix.com')
-postCommitHook = '/home/trac-migration/Run/trac/trac-post-commit-hook'
-tracEnvPath = '/home/trac-migration/Run/trac/trac-projects/twisted/'
+postCommitHook = os.path.expanduser('~/config/trac-post-commit-hook')
+tracEnvPath = os.path.expanduser('~/config/trac-env')
 tracURL = 'http://twistedmatrix.com/trac/'
-
 tracCommitServerPort = 38159
+
 
 class TracPostCommitPbServerRoot(pb.Root):
     def __init__(self, allowedIP, tracEnvPath, tracURL):
@@ -17,15 +19,14 @@ class TracPostCommitPbServerRoot(pb.Root):
         self.tracEnvPath = tracEnvPath
         self.tracURL = tracURL
 
-
     def remote_postCommit(self, revision, author, msg):
         log.msg("postCommit(revision=%r)" % (revision,))
         result = utils.getProcessOutput(
-            postCommitHook, ['-p', tracEnvPath,
+            postCommitHook, ['-p', self.tracEnvPath,
                              '-r', str(revision),
                              '-u', author,
                              '-m', msg,
-                             '-s', tracURL],
+                             '-s', self.tracURL],
             errortoo=True, env=os.environ)
         def hooked(result):
             log.msg("hook completed: %r" % (result,))
@@ -37,15 +38,14 @@ class TracPostCommitPbServerRoot(pb.Root):
         return result
 
 
-
 class TracPostCommitPbServerRootFactory(pb.PBServerFactory):
     def buildProtocol(self, addr):
+        # TODO: Should this be self.root.allowedIP instead of wolfwood?
         if addr.host != wolfwood:
             raise Exception("DISALLOWED")
         return pb.PBServerFactory.buildProtocol(self, addr)
 
 
-from twisted.application import service, internet
 application = service.Application('Trac Post Commit PB Server')
 svc = internet.TCPServer(
     tracCommitServerPort,
