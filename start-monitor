@@ -1,4 +1,4 @@
 #!/bin/bash
 
 ulimit -Sc unlimited
-./bin/monitor &
+~/bin/monitor &
