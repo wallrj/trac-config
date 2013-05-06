@@ -5,13 +5,13 @@ ulimit -Sm $((1024 * 256))
 ulimit -Sc unlimited
 
 twistd \
-    --reactor epoll \
-    --logfile ~/log/twistd.log \
-    --pidfile ~/run/twistd.pid \
-    --rundir ~/run/ \
-    --python ~/config/trac_server.tac
+	--reactor epoll \
+	--logfile ~/log/twistd.log \
+	--pidfile ~/run/twistd.pid \
+	--rundir ~/run/ \
+	--python ~/config/trac_server.tac
 
 ~pypy/bin/twistd \
 	--pidfile ~/run/trac-post-commit-pb-server.pid \
 	--logfile ~/log/trac-post-commit-pb-server.log \
-	--python trac-post-commit-pb-server
+	--python ~/config/trac-post-commit-pb-server
