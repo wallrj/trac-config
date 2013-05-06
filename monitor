@@ -2,13 +2,14 @@
 export PYTHONPATH=$PYTHONPATH:/home/trac-migration/.local/lib/python2.5/site-packages/
 
 function check() {
-    if ! curl --silent -m 30 http://twistedmatrix.com/trac/ > current-page || grep "Could not connect" current-page > /dev/null; then
-	date >> monitor-restarts.log
-	~/Run/trac/restart >> monitor-restarts.log 2>&1
-    fi
-    rm current-page
+	if ! curl --silent -m 30 http://twistedmatrix.com/trac/ > current-page || grep "Could not connect" current-page > /dev/null; then
+		date >> ~/log/monitor-restarts.log
+		~/bin/restart >> ~/log/monitor-restarts.log 2>&1
+	fi
+	rm current-page
 }
+
 while :; do
-    check >> monitor-debug.log
-    sleep 30
+	check >> ~/log/monitor-debug.log
+	sleep 30
 done
