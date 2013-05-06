@@ -7,8 +7,8 @@ from twisted.application import service, internet
 
 
 wolfwood = socket.gethostbyname('svn.twistedmatrix.com')
-postCommitHook = '/home/trac-migration/Run/trac/trac-post-commit-hook'
-tracEnvPath = '/home/trac-migration/Run/trac/trac-projects/twisted/'
+postCommitHook = os.path.expanduser('~/config/trac-post-commit-hook')
+tracEnvPath = os.path.expanduser('~/config/trac-env')
 tracURL = 'http://twistedmatrix.com/trac/'
 tracCommitServerPort = 38159
 
