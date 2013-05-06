@@ -1,5 +1,4 @@
 #!/bin/bash
-export PYTHONPATH=$PYTHONPATH:/home/trac-migration/.local/lib/python2.5/site-packages/
 
 function check() {
 	if ! curl --silent -m 30 http://twistedmatrix.com/trac/ > current-page || grep "Could not connect" current-page > /dev/null; then
