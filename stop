@@ -31,5 +31,5 @@ function terminate() {
         rm -f "$pidfile"
 }
 
-terminate twistd.pid
-terminate trac-post-commit-pb-server.pid
+terminate ~/run/twistd.pid
+terminate ~/run/trac-post-commit-pb-server.pid

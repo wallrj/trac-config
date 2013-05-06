@@ -32,6 +32,9 @@ class Trac(service.Service):
 
             run('ln -nsf {}/start {}/start'.format(self.configDir, self.binDir))
 
+            # Overwrite the generic stop executable provided by the base class
+            run('ln -nsf {}/stop {}/stop'.format(self.configDir, self.binDir))
+
             cron.install(self.serviceUser, '{}/crontab'.format(self.configDir))
 
 
