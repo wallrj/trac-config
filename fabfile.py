@@ -1,6 +1,6 @@
 from fabric.api import run, settings
 
-from braid import pip, postgres, cron, git
+from braid import pip, postgres, cron, git, dumper, utils
 from braid.twisted import service
 
 from braid import config
@@ -61,6 +61,21 @@ class Trac(service.Service):
         """
         with settings(user=self.serviceUser):
             run('{}/start-monitor'.format(self.binDir), pty=False)
+
+    def task_dump(self, localfile):
+        """
+        Create a tarball containing all information not currently stored in
+        version control and download it to the given C{localfile}.
+        """
+        with settings(user=self.serviceUser):
+            with utils.tempfile() as temp:
+                postgres.dumpLocal('trac', temp)
+
+                dumper.dump({
+                    'htpasswd': 'config/htpasswd',
+                    'attachments': 'attachments',
+                    'db.dump': temp,
+                }, localfile)
 
 
 globals().update(Trac('trac').getTasks())
