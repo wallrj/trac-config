@@ -1,4 +1,5 @@
 from fabric.api import run, settings
+from fabric.contrib.console import confirm
 
 from braid import pip, postgres, cron, git, archive, utils
 from braid.twisted import service
@@ -77,23 +78,40 @@ class Trac(service.Service):
                     'db.dump': temp,
                 }, localfile)
 
-    def task_restore(self, localfile):
+    def task_restore(self, localfile, restoreDb=True):
         """
         Restore all information not stored in version control from a tarball
         on the invoking users machine.
         """
-        # TODO: Ask for confirmation here
-        postgres.dropDb('trac')
-        postgres.createDb('trac', 'trac')
+        restoreDb = str(restoreDb).lower() in ('true', '1', 'yes', 'ok', 'y')
 
-        with settings(user=self.serviceUser):
-            with utils.tempfile() as temp:
-                archive.restore({
-                    'htpasswd': 'config/htpasswd',
-                    'attachments': 'attachments',
-                    'db.dump': temp,
-                }, localfile)
-                postgres.restoreFromPath('trac', temp)
+        if restoreDb:
+            msg = (
+                'All existing files present in the backup will be overwritten and\n'
+                'the database dropped and recreated. Do you want to proceed?'
+            )
+        else:
+            msg = (
+                'All existing files present in the backup will be overwritten\n'
+                '(the database will not be touched). Do you want to proceed?'
+            )
+
+        print ''
+        if confirm(msg, default=False):
+            # TODO: Ask for confirmation here
+            if restoreDb:
+                postgres.dropDb('trac')
+                postgres.createDb('trac', 'trac')
+
+            with settings(user=self.serviceUser):
+                with utils.tempfile() as temp:
+                    archive.restore({
+                        'htpasswd': 'config/htpasswd',
+                        'attachments': 'attachments',
+                        'db.dump': temp,
+                    }, localfile)
+                    if restoreDb:
+                        postgres.restoreFromPath('trac', temp)
 
 
 
