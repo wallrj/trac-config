@@ -1,6 +1,6 @@
 from fabric.api import run, settings
 
-from braid import pip, postgres, cron, git, dumper, utils
+from braid import pip, postgres, cron, git, archive, utils
 from braid.twisted import service
 
 from braid import config
@@ -69,13 +69,32 @@ class Trac(service.Service):
         """
         with settings(user=self.serviceUser):
             with utils.tempfile() as temp:
-                postgres.dumpLocal('trac', temp)
+                postgres.dumpToPath('trac', temp)
 
-                dumper.dump({
+                archive.dump({
                     'htpasswd': 'config/htpasswd',
                     'attachments': 'attachments',
                     'db.dump': temp,
                 }, localfile)
+
+    def task_restore(self, localfile):
+        """
+        Restore all information not stored in version control from a tarball
+        on the invoking users machine.
+        """
+        # TODO: Ask for confirmation here
+        postgres.dropDb('trac')
+        postgres.createDb('trac', 'trac')
+
+        with settings(user=self.serviceUser):
+            with utils.tempfile() as temp:
+                archive.restore({
+                    'htpasswd': 'config/htpasswd',
+                    'attachments': 'attachments',
+                    'db.dump': temp,
+                }, localfile)
+                postgres.restoreFromPath('trac', temp)
+
 
 
 globals().update(Trac('trac').getTasks())
