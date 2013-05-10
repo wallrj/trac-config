@@ -26,7 +26,8 @@ class Trac(service.Service):
             run('ln -nsf ~/svn {}/trac-env/svn-repo'.format(self.configDir))
 
             run('mkdir -p ~/attachments')
-            run('ln -nsf ~/svn {}/trac-env/attachments'.format(self.configDir))
+            run('ln -nsf ~/attachments {}/trac-env/attachments'.format(
+                self.configDir))
 
             run('ln -nsf {} {}/trac-env/log'.format(self.logDir, self.configDir))
 
