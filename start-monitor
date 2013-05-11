@@ -1,8 +1,0 @@
-#!/bin/bash
-
-ulimit -Sc unlimited
-
-~pypy/bin/twistd \
-	--pidfile ~/run/trac-monitor.pid \
-	--logfile ~/log/trac-monitor.log \
-	--python ~/config/monitor

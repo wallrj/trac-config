@@ -4,14 +4,7 @@ ulimit -Sm $((1024 * 256))
 ulimit -Sm $((1024 * 256))
 ulimit -Sc unlimited
 
-twistd \
-	--reactor epoll \
-	--logfile ~/log/twistd.log \
-	--pidfile ~/run/twistd.pid \
-	--rundir ~/run/ \
-	--python ~/config/trac_server.tac
-
 ~pypy/bin/twistd \
-	--pidfile ~/run/trac-post-commit-pb-server.pid \
-	--logfile ~/log/trac-post-commit-pb-server.log \
-	--python ~/config/trac-post-commit-pb-server
+	--pidfile ~/run/trac-infra.pid \
+	--logfile ~/log/trac-infra.log \
+	--python ~/config/server.tac

@@ -80,8 +80,8 @@ processMonitor = procmon.ProcessMonitor()
 processMonitor.addProcess('trac-server', [
     'twistd',
     '--reactor', 'epoll',
-    '--logfile', os.path.expanduser('~/log/twistd.log'),
-    '--pidfile', os.path.expanduser('~/run/twistd.pid'),
+    '--logfile', os.path.expanduser('~/log/trac-twistd.log'),
+    '--pidfile', os.path.expanduser('~/run/trac-twistd.pid'),
     '--rundir', os.path.expanduser('~/run/'),
     '--python', os.path.expanduser('~/config/trac_server.tac'),
     '--nodaemon',

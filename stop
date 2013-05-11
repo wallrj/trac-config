@@ -31,5 +31,7 @@ function terminate() {
         rm -f "$pidfile"
 }
 
-terminate ~/run/twistd.pid
-terminate ~/run/trac-post-commit-pb-server.pid
+terminate ~/run/trac-infra.pid
+
+# Just in case this is still running after killing the parent
+terminate ~/run/trac-twistd.pid
