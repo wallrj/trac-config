@@ -51,13 +51,6 @@ class Trac(service.Service):
             else:
                 pip.install('--no-deps --upgrade git+https://github.com/twisted-infra/twisted-trac-source.git', python='system')
 
-    def task_start_monitor(self):
-        """
-        Start the monitor.
-        """
-        with settings(user=self.serviceUser):
-            run('{}/start-monitor'.format(self.binDir), pty=False)
-
     def task_dump(self, localfile):
         """
         Create a tarball containing all information not currently stored in
