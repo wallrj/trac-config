@@ -5,7 +5,8 @@ from braid import pip, postgres, cron, git, archive, utils
 from braid.twisted import service
 
 from braid import config
-_hush_pyflakes = [config]
+from braid.tasks import addTasks
+__all__ = ['config']
 
 
 class Trac(service.Service):
@@ -109,4 +110,4 @@ class Trac(service.Service):
 
 
 
-globals().update(Trac('trac').getTasks())
+addTasks(globals(), Trac('trac').getTasks())
