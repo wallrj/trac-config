@@ -1,6 +1,7 @@
 from fabric.api import run, settings
+from fabric.contrib.console import confirm
 
-from braid import pip, postgres, cron, git
+from braid import pip, postgres, cron, git, archive, utils
 from braid.twisted import service
 
 from braid import config
@@ -26,7 +27,8 @@ class Trac(service.Service):
             run('/bin/ln -nsf ~/svn {}/trac-env/svn-repo'.format(self.configDir))
 
             run('/bin/mkdir -p ~/attachments')
-            run('/bin/ln -nsf ~/svn {}/trac-env/attachments'.format(self.configDir))
+            run('/bin/ln -nsf ~/attachments {}/trac-env/attachments'.format(
+                self.configDir))
 
             run('/bin/ln -nsf {} {}/trac-env/log'.format(self.logDir, self.configDir))
 
@@ -60,6 +62,57 @@ class Trac(service.Service):
         """
         with settings(user=self.serviceUser):
             run('{}/start-monitor'.format(self.binDir), pty=False)
+
+    def task_dump(self, localfile):
+        """
+        Create a tarball containing all information not currently stored in
+        version control and download it to the given C{localfile}.
+        """
+        with settings(user=self.serviceUser):
+            with utils.tempfile() as temp:
+                postgres.dumpToPath('trac', temp)
+
+                archive.dump({
+                    'htpasswd': 'config/htpasswd',
+                    'attachments': 'attachments',
+                    'db.dump': temp,
+                }, localfile)
+
+    def task_restore(self, localfile, restoreDb=True):
+        """
+        Restore all information not stored in version control from a tarball
+        on the invoking users machine.
+        """
+        restoreDb = str(restoreDb).lower() in ('true', '1', 'yes', 'ok', 'y')
+
+        if restoreDb:
+            msg = (
+                'All existing files present in the backup will be overwritten and\n'
+                'the database dropped and recreated. Do you want to proceed?'
+            )
+        else:
+            msg = (
+                'All existing files present in the backup will be overwritten\n'
+                '(the database will not be touched). Do you want to proceed?'
+            )
+
+        print ''
+        if confirm(msg, default=False):
+            # TODO: Ask for confirmation here
+            if restoreDb:
+                postgres.dropDb('trac')
+                postgres.createDb('trac', 'trac')
+
+            with settings(user=self.serviceUser):
+                with utils.tempfile() as temp:
+                    archive.restore({
+                        'htpasswd': 'config/htpasswd',
+                        'attachments': 'attachments',
+                        'db.dump': temp,
+                    }, localfile)
+                    if restoreDb:
+                        postgres.restoreFromPath('trac', temp)
+
 
 
 globals().update(Trac('trac').getTasks())
