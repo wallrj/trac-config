@@ -5,6 +5,7 @@ ulimit -Sm $((1024 * 256))
 ulimit -Sc unlimited
 
 ~pypy/bin/twistd \
-	--pidfile ~/run/trac-infra.pid \
-	--logfile ~/log/trac-infra.log \
+	--pidfile ~/run/twistd.pid \
+	--logfile ~/log/twistd.log \
+	--rundir ~/run \
 	--python ~/config/server.tac
