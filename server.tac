@@ -5,6 +5,10 @@ import socket
 from twisted.application import service
 from twisted.runner import procmon
 
+import sys
+from os.path import dirname
+sys.path.insert(0, dirname(__file__))
+
 from monitor import TracMonitor
 import postcommit
 
