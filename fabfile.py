@@ -1,8 +1,8 @@
 from fabric.api import run, settings
-from fabric.contrib.console import confirm
 
 from braid import pip, postgres, cron, git, archive, utils
 from braid.twisted import service
+from braid.utils import confirm
 
 from braid import config
 from braid.tasks import addTasks
@@ -76,16 +76,16 @@ class Trac(service.Service):
         if restoreDb:
             msg = (
                 'All existing files present in the backup will be overwritten and\n'
-                'the database dropped and recreated. Do you want to proceed?'
+                'the database dropped and recreated.'
             )
         else:
             msg = (
                 'All existing files present in the backup will be overwritten\n'
-                '(the database will not be touched). Do you want to proceed?'
+                '(the database will not be touched).'
             )
 
         print ''
-        if confirm(msg, default=False):
+        if confirm(msg):
             # TODO: Ask for confirmation here
             if restoreDb:
                 postgres.dropDb('trac')
