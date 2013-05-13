@@ -6,6 +6,7 @@ from twisted.application.internet import TimerService
 
 class TracMonitor(service.MultiService):
     def __init__(self, restartCallback, checkInterval, tracURL, timeout):
+        service.MultiService.__init__(self)
         self._restartCallback = restartCallback
         self._tracURL = tracURL
         self._timeout = timeout
