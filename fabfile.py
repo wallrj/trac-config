@@ -31,6 +31,9 @@ class Trac(service.Service):
             run('/bin/ln -nsf ~/attachments {}/trac-env/attachments'.format(
                 self.configDir))
 
+            run('/bin/ln -nsf ~/website/trac-files/templates {}/trac-env/templates'.format(
+                self.configDir))
+
             run('/bin/ln -nsf {} {}/trac-env/log'.format(self.logDir, self.configDir))
 
             run('/bin/ln -nsf {}/start {}/start'.format(self.configDir, self.binDir))
@@ -45,6 +48,7 @@ class Trac(service.Service):
         # TODO
         with settings(user=self.serviceUser):
             git.branch('https://github.com/twisted-infra/trac-config', self.configDir)
+            git.branch('https://github.com/twisted-infra/t-web', '~/website')
 
             if _installDeps:
                 pip.install('git+https://github.com/twisted-infra/twisted-trac-source.git', python='system')
