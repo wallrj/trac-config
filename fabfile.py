@@ -22,7 +22,7 @@ class Trac(service.Service):
 
         with settings(user=self.serviceUser):
             pip.install('psycopg2', python='system')
-            self.task_update(_installDeps=True)
+            self.update(_installDeps=True)
 
             run('/bin/mkdir -p ~/svn')
             run('/bin/ln -nsf ~/svn {}/trac-env/svn-repo'.format(self.configDir))
@@ -38,7 +38,7 @@ class Trac(service.Service):
             cron.install(self.serviceUser, '{}/crontab'.format(self.configDir))
 
 
-    def task_update(self, _installDeps=False):
+    def update(self, _installDeps=False):
         """
         Update trac config.
         """
@@ -50,6 +50,15 @@ class Trac(service.Service):
                 pip.install('git+https://github.com/twisted-infra/twisted-trac-source.git', python='system')
             else:
                 pip.install('--no-deps --upgrade git+https://github.com/twisted-infra/twisted-trac-source.git', python='system')
+
+
+    def task_update(self):
+        """
+        Update config and restart.
+        """
+        self.update()
+        self.task_restart()
+
 
     def task_dump(self, localfile):
         """
