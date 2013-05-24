@@ -52,8 +52,10 @@ class Trac(service.Service):
 
             if _installDeps:
                 pip.install('git+https://github.com/twisted-infra/twisted-trac-source.git', python='system')
+                pip.install('git+https://github.com/twisted-infra/twisted-trac-plugins.git', python='system')
             else:
                 pip.install('--no-deps --upgrade git+https://github.com/twisted-infra/twisted-trac-source.git', python='system')
+                pip.install('--no-deps --upgrade git+https://github.com/twisted-infra/twisted-trac-plugins.git', python='system')
 
 
     def task_update(self):
