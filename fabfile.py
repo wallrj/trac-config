@@ -22,6 +22,7 @@ class Trac(service.Service):
 
         with settings(user=self.serviceUser):
             pip.install('psycopg2', python='system')
+            pip.install('TracAccountManager==0.4.3', python='system')
             self.update(_installDeps=True)
 
             run('/bin/mkdir -p ~/svn')
