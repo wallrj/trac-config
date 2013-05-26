@@ -22,8 +22,9 @@ class Trac(service.Service):
 
         with settings(user=self.serviceUser):
             pip.install('psycopg2', python='system')
-            pip.install('TracAccountManager==0.4.3', python='system')
             self.update(_installDeps=True)
+            # Note that this has to be after trac is installed, to get the right version
+            pip.install('TracAccountManager==0.4.3', python='system')
 
             run('/bin/mkdir -p ~/svn')
             run('/bin/ln -nsf ~/svn {}/trac-env/svn-repo'.format(self.configDir))
