@@ -21,7 +21,7 @@ class Trac(service.Service):
         postgres.createDb('trac', 'trac')
 
         with settings(user=self.serviceUser):
-            pip.install('psycopg2', python='system')
+            pip.install('psycopg2 pygments', python='system')
             self.update(_installDeps=True)
             # Note that this has to be after trac is installed, to get the right version
             pip.install('TracAccountManager==0.4.3', python='system')
