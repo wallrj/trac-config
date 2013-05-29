@@ -10,7 +10,7 @@ class TracMonitor(service.MultiService):
         self._restartCallback = restartCallback
         self._tracURL = tracURL
         self._timeout = timeout
-        TimerService(checkInterval, self.check, tracURL, timeout).setServiceParent(self)
+        TimerService(checkInterval, self.check).setServiceParent(self)
 
     def restart(self, f):
         log.err(f, 'accessing trac.')
