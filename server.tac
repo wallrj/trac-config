@@ -38,7 +38,7 @@ processMonitor.addProcess('trac-server', [
 processMonitor.setServiceParent(application)
 
 def restartTrac():
-    processMonitor.killProcess('trac-server')
+    processMonitor.stopProcess('trac-server')
 
 # Setup monitoring service
 (TracMonitor(restartTrac, CHECK_INTERVAL, TRAC_URL, TRAC_TIMEOUT)
