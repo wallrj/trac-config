@@ -102,8 +102,8 @@ class RootResource(Resource):
     def getChildWithDefault(self, name, request):
         if name != "trac":
             return File("/dev/null")
-        if request.postpath and request.postpath[:2] == ["chrome", "common"]:
-            path = os.path.join(self.htdocs, "/".join(request.postpath[2:]))
+        if request.postpath and request.postpath[:1] == ["chrome"]:
+            path = os.path.join(self.htdocs, "/".join(request.postpath[1:]))
             request.postpath[:] = []
             return File(path)
         elif request.postpath and request.postpath[:1] == ["raw-attachment"]:
