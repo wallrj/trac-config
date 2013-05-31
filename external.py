@@ -23,8 +23,6 @@ Provides C{twisted.web.resource.Resource} implementations for various external
 web resources.
 """
 
-import os
-
 import trac.web.main
 import trac.web.standalone
 
@@ -103,13 +101,11 @@ class RootResource(Resource):
         if name != "trac":
             return File("/dev/null")
         if request.postpath and request.postpath[:1] == ["chrome"]:
-            path = os.path.join(self.htdocs, "/".join(request.postpath[1:]))
-            request.postpath[:] = []
-            return File(path)
+            request.postpath.pop(0)
+            return File(self.htdocs)
         elif request.postpath and request.postpath[:1] == ["raw-attachment"]:
-            path = os.path.join(self.attachments, "/".join(request.postpath[1:]))
-            request.postpath[:] = []
-            return File(path)
+            request.postpath.pop(0)
+            return File(self.attachments)
         else:
             return self.tracResource
 
