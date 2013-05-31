@@ -12,7 +12,6 @@ It uses the following directories
 ~/attachments - trac attachments
 ~/svn/Twisted - mirror of svn repo for trac
 ~/website - containst a checkout of t-web
-~/website/trac-files/templates - custom trac templates
 
 It uses the copy of trac from
 https://github.com/twisted-infra/twisted-trac-source

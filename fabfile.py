@@ -33,9 +33,6 @@ class Trac(service.Service):
             run('/bin/ln -nsf ~/attachments {}/trac-env/attachments'.format(
                 self.configDir))
 
-            run('/bin/ln -nsf ~/website/trac-files/templates {}/trac-env/templates'.format(
-                self.configDir))
-
             run('/bin/ln -nsf {} {}/trac-env/log'.format(self.logDir, self.configDir))
 
             run('/bin/ln -nsf {}/start {}/start'.format(self.configDir, self.binDir))
