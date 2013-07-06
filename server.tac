@@ -13,7 +13,7 @@ from monitor import TracMonitor
 import postcommit
 
 
-TRAC_URL = 'http://twistedmatrix.com/trac/'
+TRAC_URL = 'https://twistedmatrix.com/trac/'
 TRAC_TIMEOUT = 30
 CHECK_INTERVAL = 30
 

@@ -83,7 +83,7 @@ class TracMixin:
         particular Trac environment via WSGI.
         """
         environ['trac.env_path'] = self.path
-        environ['trac.base_url'] = 'http://twistedmatrix.com/trac'
+        environ['trac.base_url'] = 'https://twistedmatrix.com/trac'
         return trac.web.main.dispatch_request(environ, start_response)
 
 
