@@ -114,10 +114,10 @@
 
     <!--! Show a reminder on the attachment page about including tests. -->
     <py:match path="form[@id='attachment']/div[@class='buttons']">
-      <p>Please read this first:</p>
-      <div class="row-fluid alert">
-        <div class="span5 alert-danger">
-          <h3>If you are submitting a patch:</h3>
+
+      <div class="row-fluid">
+        <div class="span5 alert-danger well">
+          <h4>If you are submitting a patch:</h4>
           <ol>
             <li><strong>Read the <a class="wiki"
             href="/trac/wiki/TwistedDevelopment#SubmittingaPatch">patch
@@ -145,18 +145,19 @@
           </ol>
         </div>
 
-        <div class="span5 alert-danger">
-          <h3>If you are submitting an example or demonstration:</h3>
+        <div class="span5 alert-danger well">
+          <h4>If you are submitting an example or demonstration:</h4>
           <ol>
             <li>Make it a <strong><a class="ext-link"
-            href="http://sscce.org/"><span class="icon"> </span>Short,
-            Self Contained, Correct Example</a></strong></li>
+            href="http://sscce.org/">Short, Self Contained, Correct
+            Example</a></strong></li>
 
             <li><strong>Include instructions</strong> showing how to run the example and the
               expected output.</li>
           </ol>
         </div>
-        <div class="span5 alert-danger">
+
+        <div class="span5 alert-danger well">
           <p>And always <strong>add an explanatory comment to the
               ticket</strong>, summarising the purpose of your
             attachment.</p>
