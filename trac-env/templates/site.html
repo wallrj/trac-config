@@ -114,8 +114,9 @@
 
     <!--! Show a reminder on the attachment page about including tests. -->
     <py:match path="form[@id='attachment']/div[@class='buttons']">
+      <div class="alert-danger">
         <p> Please read this first: </p>
-        <ol class=".alert">
+        <ol>
           <li>If you are submitting a patch:
             <ol>
               <li><strong>Read the <a class="wiki"
@@ -159,7 +160,7 @@
         <p>And always <strong>add an explanatory comment to the
         ticket</strong>, summarising the purpose of your
         attachment.</p>
-
+        </div>
         <div py:attrs="select('@*')">
             ${select('*|comment()|text()')}
         </div>
