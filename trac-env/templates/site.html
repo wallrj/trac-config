@@ -112,13 +112,71 @@
 
     <!--! Show a reminder on the attachment page about including tests. -->
     <py:match path="form[@id='attachment']/div[@class='buttons']">
-        <p>
-        Adding a patch that changes code? Make sure it includes unit tests!
-        <a href="/trac/wiki/ReviewProcess">See the complete acceptance criteria</a>. Thanks!
-        </p>
-        <div py:attrs="select('@*')">
-            ${select('*|comment()|text()')}
+
+      <div>
+        <div>
+          <h4>If you are submitting a patch:</h4>
+          <ol>
+            <li>
+              <strong>Read the <a class="wiki" href="/trac/wiki/TwistedDevelopment#SubmittingaPatch">patch guidelines</a>.</strong>
+            </li>
+
+            <li>
+              <strong>Include unit tests!</strong>
+              If your patch changes code it must include unit tests.
+              <a href="/trac/wiki/ReviewProcess">See the complete acceptance criteria</a>.
+            </li>
+
+            <li>
+              <strong>Keep patches as small as possible (&lt;800 lines)</strong>.
+              This will make it easy for your change to be reviewed.
+              For larger changes please contact <a href="/trac/wiki/TwistedCommunity">Twisted developers</a> first,
+              to discuss how your contribution can be broken into a series of tickets and small patches.
+            </li>
+
+            <li>
+              <strong>Use a standard patch filename</strong>.
+              Your patch filename should be
+              all lower case,
+              with no spaces.
+              It should include the ticket number,
+              and a patch version number.
+              Use a .patch or .diff extension so that Trac can apply syntax highlighting.
+              eg agent-howto-spelling-1234-1.patch
+            </li>
+
+            <li>
+              <strong>Add the "review" keyword</strong> to the ticket after uploading your patch.
+              This will add your patch to the <a class="report" href="/trac/report/15">review queue</a>.
+            </li>
+          </ol>
         </div>
+
+        <div>
+          <h4>If you are submitting an example or demonstration:</h4>
+          <ol>
+            <li>
+              Make it a <strong><a class="ext-link" href="http://sscce.org/">Short, Self Contained, Correct Example</a></strong>
+            </li>
+
+            <li>
+              <strong>Include instructions</strong>
+              showing how to run the example and the expected output.
+            </li>
+          </ol>
+        </div>
+
+        <div>
+          <p>
+            And after you've attached your file,
+            always <strong>add an explanatory comment to the ticket</strong>,
+            summarizing the purpose of your attachment.
+          </p>
+        </div>
+      </div>
+      <div py:attrs="select('@*')">
+        ${select('*|comment()|text()')}
+      </div>
     </py:match>
 
     <!--! Add links to diffresource and buildbot -->
@@ -128,9 +186,9 @@
         <py:if test="ticket['branch']">
           <br/>
           (<a href="/~diffresource.twistd/${ticket.id}">diff</a>,
-	  <a href="https://github.com/twisted/twisted/compare/trunk...${ticket['branch'][9:]}">github</a>,
-	  <a href="https://buildbot.twistedmatrix.com/boxes-supported?branch=/${ticket['branch']}">buildbot</a>,
-	  <a href="/trac/log/${ticket['branch']}">log</a>)
+          <a href="https://github.com/twisted/twisted/compare/trunk...${ticket['branch'][9:]}">github</a>,
+          <a href="https://buildbot.twistedmatrix.com/boxes-supported?branch=/${ticket['branch']}">buildbot</a>,
+          <a href="/trac/log/${ticket['branch']}">log</a>)
         </py:if>
       </td>
     </py:match>
