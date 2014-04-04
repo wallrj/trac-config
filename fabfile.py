@@ -1,3 +1,6 @@
+import shutil
+import tempfile
+
 from fabric.api import run, settings
 
 from braid import pip, postgres, cron, git, archive, utils
@@ -15,10 +18,6 @@ class Trac(service.Service):
         Install trac.
         """
         self.bootstrap(python='system')
-
-        # FIXME: Make these idempotent.
-        postgres.createUser('trac')
-        postgres.createDb('trac', 'trac')
 
         with settings(user=self.serviceUser):
             pip.install('psycopg2 pygments', python='system')
@@ -41,6 +40,12 @@ class Trac(service.Service):
             run('/bin/ln -nsf {}/start {}/start'.format(self.configDir, self.binDir))
 
             cron.install(self.serviceUser, '{}/crontab'.format(self.configDir))
+
+            # Create an empty password file if not present.
+            run('/usr/bin/touch config/htpasswd')
+
+        # FIXME: Make these idempotent.
+        self.initdb()
 
 
     def update(self, _installDeps=False):
@@ -118,6 +123,38 @@ class Trac(service.Service):
                     if restoreDb:
                         postgres.restoreFromPath('trac', temp)
 
+
+    def initdb(self):
+        """
+        Drop the postgresql cluster and recreate with an empty trac database.
+        """
+        postgres.newCluster()
+        postgres.createUser('trac')
+        postgres.createDb('trac', 'trac')
+
+        with settings(user=self.serviceUser):
+            # Run trac initenv to create the postgresql database tables, but use
+            # a throwaway trac-env directory.
+            temporary_trac_env = tempfile.mkdtemp()
+            try:
+                run('~/.local/bin/trac-admin '
+                    '{} initenv TempTrac postgres://@/trac svn ""'.format(
+                        temporary_trac_env))
+            finally:
+                shutil.rmtree(temporary_trac_env)
+            # Run an upgrade to add plugin specific database tables and columns.
+            run('~/.local/bin/trac-admin config/trac-env upgrade --no-backup')
+
+
+    def task_initdb(self):
+        """
+        Drop the postgresql cluster and recreate with an empty trac database.
+        """
+        # Open connections prevent postgres from shutting down so stop trac
+        # first.
+        self.stop()
+        self.initdb()
+        self.start()
 
 
 addTasks(globals(), Trac('trac').getTasks())
