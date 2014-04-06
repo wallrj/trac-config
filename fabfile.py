@@ -128,7 +128,6 @@ class Trac(service.Service):
         """
         Drop the postgresql cluster and recreate with an empty trac database.
         """
-        postgres.newCluster()
         postgres.createUser('trac')
         postgres.createDb('trac', 'trac')
 
