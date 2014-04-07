@@ -1,7 +1,7 @@
 import shutil
 import tempfile
 
-from fabric.api import run, settings
+from fabric.api import abort, env, run, settings
 
 from braid import pip, postgres, cron, git, archive, utils
 from braid.twisted import service
@@ -45,7 +45,8 @@ class Trac(service.Service):
             run('/usr/bin/touch config/htpasswd')
 
         # FIXME: Make these idempotent.
-        self.initdb()
+        postgres.createUser('trac')
+        postgres.createDb('trac', 'trac')
 
 
     def update(self, _installDeps=False):
@@ -88,6 +89,7 @@ class Trac(service.Service):
                     'db.dump': temp,
                 }, localfile)
 
+
     def task_restore(self, localfile, restoreDb=True):
         """
         Restore all information not stored in version control from a tarball
@@ -124,16 +126,20 @@ class Trac(service.Service):
                         postgres.restoreFromPath('trac', temp)
 
 
-    def initdb(self):
+    def task_installTestData(self):
         """
-        Drop the postgresql cluster and recreate with an empty trac database.
+        Create an empty trac database for testing.
         """
-        postgres.createUser('trac')
-        postgres.createDb('trac', 'trac')
+        if env.get('environment') == 'production':
+           abort("Don't use installTestData in production.")
+
+        if postgres.tableExists('trac', 'system'):
+           abort("Existing Trac tables found.")
 
         with settings(user=self.serviceUser):
             # Run trac initenv to create the postgresql database tables, but use
-            # a throwaway trac-env directory.
+            # a throwaway trac-env directory because that comes from
+            # https://github.com/twisted-infra/trac-config/tree/master/trac-env
             temporary_trac_env = tempfile.mkdtemp()
             try:
                 run('~/.local/bin/trac-admin '
@@ -141,19 +147,9 @@ class Trac(service.Service):
                         temporary_trac_env))
             finally:
                 shutil.rmtree(temporary_trac_env)
+
             # Run an upgrade to add plugin specific database tables and columns.
             run('~/.local/bin/trac-admin config/trac-env upgrade --no-backup')
-
-
-    def task_initdb(self):
-        """
-        Drop the postgresql cluster and recreate with an empty trac database.
-        """
-        # Open connections prevent postgres from shutting down so stop trac
-        # first.
-        self.stop()
-        self.initdb()
-        self.start()
 
 
 addTasks(globals(), Trac('trac').getTasks())
